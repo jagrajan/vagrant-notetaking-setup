@@ -1,0 +1,43 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+
+" Git related plugins
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+Plug 'tpope/vim-surround'
+
+Plug 'vim-airline/vim-airline'
+Plug 'yggdroot/indentline'
+
+Plug 'tpope/vim-commentary'
+
+Plug 'christoomey/vim-tmux-navigator'
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
+set tabstop=2
+set expandtab
+set softtabstop=2
+set shiftwidth=2
+
+set number
+set relativenumber
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+map <Space> :
+
+set colorcolumn=81
+set conceallevel=0
