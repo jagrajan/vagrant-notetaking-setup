@@ -12,6 +12,7 @@ end
 package 'vim'
 package 'tmux'
 package 'texlive-latex-extra'
+package 'pandoc'
 
 cookbook_file 'vimrc' do
   owner 'vagrant'
@@ -21,4 +22,13 @@ end
 cookbook_file 'tmux.conf' do
   owner 'vagrant'
   path '/home/vagrant/.tmux.conf'
+end
+
+directory '/home/vagrant/.pandoc/templates' do
+  recursive true
+  action :create
+end
+
+cookbook_file 'template.tex' do
+  path '/home/vagrant/.pandoc/templates/template.tex'
 end

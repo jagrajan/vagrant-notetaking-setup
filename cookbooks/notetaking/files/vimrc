@@ -3,10 +3,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
 call plug#begin('~/.vim/plugged')
 
-" Git related plugins
+" Git related pluginsAC
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
@@ -22,7 +21,16 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+Plug 'othree/yajs.vim'
+Plug 'mxw/vim-jsx'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'hail2u/vim-css3-syntax'
+
+Plug 'bronson/vim-trailing-whitespace'
+
 call plug#end()
+
+let mapleader=","
 
 set tabstop=2
 set expandtab
@@ -39,5 +47,38 @@ nnoremap <C-H> <C-W><C-H>
 
 map <Space> :
 
-set colorcolumn=81
 set conceallevel=0
+
+"====[ Make the 81st column stand out ]====================
+
+highlight ColorColumn ctermbg=magenta
+call matchadd('ColorColumn', '\%81v', 100)
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+nnoremap <expr> <Leader>, (len(system('git rev-parse')) ? ':Files' : ':GFiles')."\<cr>"
+
+function! GFilesFallback()
+  let output = system('git rev-parse --show-toplevel') " Is there a faster way?
+  let prefix = get(g:, 'fzf_command_prefix', '')
+  if v:shell_error == 0
+    exec "normal :" . prefix . "GFiles\<CR>"
+  else
+    exec "normal :" . prefix . "Files\<CR>"
+  endif
+  return 0
+endfunction
+
+nnoremap <Leader>, :call GFilesFallback()<CR>
