@@ -3,10 +3,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
 call plug#begin('~/.vim/plugged')
 
-" Git related plugins
+" Git related pluginsAC
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
@@ -22,7 +21,32 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+Plug 'othree/yajs.vim'
+Plug 'mxw/vim-jsx'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'hail2u/vim-css3-syntax'
+
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'godlygeek/tabular'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'Rican7/php-doc-modded'
+
+Plug 'dense-analysis/ale'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
 call plug#end()
+
+let mapleader=","
 
 set tabstop=2
 set expandtab
@@ -37,7 +61,84 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Stay in visual mode when indenting. You will never have to run gv after
+" performing an indentation.
+vnoremap < <gv
+vnoremap > >gv
+
+" Make Y yank everything from the cursor to the end of the line. This makes Y
+" act more like C or D because by default, Y yanks the current line (i.e. the
+" same as yy).
+noremap Y y$
+
 map <Space> :
 
-set colorcolumn=81
-set conceallevel=0
+let g:indentLine_setConceal = 0
+
+augroup vimrc
+  au BufReadPre * setlocal foldmethod=indent
+  au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
+
+"====[ Make the 81st column stand out ]====================
+
+highlight ColorColumn ctermbg=magenta
+call matchadd('ColorColumn', '\%81v', 100)
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+nnoremap <Leader>vi :e ~/.config/nvim/init.vim<cr>
+nnoremap <Leader>rc :e ~/.jag/.bashrc<cr>
+nnoremap <Leader>fw :FixWhitespace<cr>
+nnoremap <Leader>gc :Gcommit<cr>
+nnoremap <Leader>gg :Gstatus<cr>
+nnoremap <Leader>zz :tabedit %<cr>
+
+function! GFilesFallback()
+  let output = system('git rev-parse --show-toplevel') " Is there a faster way?
+  let prefix = get(g:, 'fzf_command_prefix', '')
+  if v:shell_error == 0
+    exec "normal :" . prefix . "GFiles\<CR>"
+  else
+    exec "normal :" . prefix . "Files\<CR>"
+  endif
+  return 0
+endfunction
+
+nnoremap <Leader>, :Files<cr>
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R --languages=php --exclude=vendor --exclude=html/admin/dist-php --exclude-html/admin/dir=alertme-php'
+
+" Ale
+let g:ale_sign_column_always = 1
+" let g:ale_php_langserver_executable = 'langserver'
+let g:ale_php_phan_executable = 'vendor/bin/phan'
+let g:ale_linters = {
+\   'php': ['php', 'langserver'],
+\}
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 0
+let g:deoplete#enable_at_startup = 1
+" Use ALE and also some plugin 'foobar' as completion sources for all code.
+" call deoplete#custom#option('sources', {
+" \ '_': ['ale'],
+" \})
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
+nnoremap <C-P> :call PhpDocSingle()<CR>
+vnoremap <C-P> :call PhpDocRange()<CR>
