@@ -1,0 +1,44 @@
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsname,svgnames*,x11names*,table}{xcolor}
+% Set document class and font size
+\documentclass[12pt]{article}
+
+% Set encoding
+\usepackage[utf8]{inputenc}
+
+% Set document language
+\usepackage[english]{babel}
+
+% Set document margins
+\usepackage[margin=1in,headheight=14pt]{geometry}
+
+% Used for title page border
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand\HRule{\rule{\textwidth}{1pt}}
+
+\usepackage{framed,graphicx,xcolor}
+
+\usepackage{listings}
+% \newcommand{\passthrough}[1]{#1}
+
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+% Set up header and footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{LeftHead}
+\rhead{Page \textbf{\thepage} of \textbf{\pageref{LastPage}}}
+\rfoot{Jagrajan Bhullar}
+
+\usepackage{lastpage}
+
+\begin{document}
+
+$body$
+
+\end{document}

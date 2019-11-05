@@ -18,6 +18,7 @@ package 'python-neovim'
 package 'python3-neovim'
 package 'python-pip'
 package 'python3-pip'
+package 'pandoc'
 
 execute 'mkdir -p /home/vagrant/.config/nvim' do
   user 'vagrant'
@@ -59,3 +60,11 @@ execute 'curl -fLo /home/vagrant/.local/share/nvim/site/autoload/plug.vim --crea
 end
 execute 'pip install pynvim'
 execute 'pip3 install pynvim'
+directory '/home/vagrant/.pandoc/templates' do
+  recursive true
+  action :create
+end
+
+cookbook_file 'template.tex' do
+  path '/home/vagrant/.pandoc/templates/template.tex'
+end
