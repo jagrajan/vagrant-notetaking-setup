@@ -21,17 +21,13 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-Plug 'othree/yajs.vim'
-Plug 'mxw/vim-jsx'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'hail2u/vim-css3-syntax'
-
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'godlygeek/tabular'
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'Rican7/php-doc-modded'
 
 Plug 'joshdick/onedark.vim'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'mileszs/ack.vim'
 
 Plug 'dense-analysis/ale'
 if has('nvim')
@@ -67,11 +63,6 @@ set shiftwidth=2
 
 set number
 set relativenumber
-
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 
 " Stay in visual mode when indenting. You will never have to run gv after
 " performing an indentation.
@@ -125,6 +116,7 @@ tnoremap <c-q>tv <c-\><c-n> :vs +terminal<cr>
 tnoremap <c-q>ts <c-\><c-n> :sp +terminal<cr>
 
 nnoremap <Leader>, :Files<cr>
+nnoremap <Leader>a :Ack!<Space>
 
 " Ale
 let g:ale_sign_column_always = 1

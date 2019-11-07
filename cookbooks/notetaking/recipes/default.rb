@@ -19,6 +19,8 @@ package 'python3-neovim'
 package 'python-pip'
 package 'python3-pip'
 package 'pandoc'
+package 'ctags'
+package 'ack-grep'
 
 execute 'mkdir -p /home/vagrant/.config/nvim' do
   user 'vagrant'
@@ -61,6 +63,7 @@ end
 execute 'pip install pynvim'
 execute 'pip3 install pynvim'
 execute 'pip3 install neovim-remote'
+execute 'dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep'
 directory '/home/vagrant/.pandoc/templates' do
   recursive true
   action :create
