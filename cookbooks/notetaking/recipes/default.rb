@@ -44,9 +44,9 @@ cookbook_file 'nvim.appimage' do
   path '/home/vagrant/nvim.appimage'
 end
 
-cookbook_file 'profile' do
+cookbook_file 'bashrc' do
   owner 'vagrant'
-  path '/home/vagrant/.profile'
+  path '/home/vagrant/.bashrc'
 end
 
 cookbook_file 'fd.deb' do
@@ -60,6 +60,7 @@ execute 'curl -fLo /home/vagrant/.local/share/nvim/site/autoload/plug.vim --crea
 end
 execute 'pip install pynvim'
 execute 'pip3 install pynvim'
+execute 'pip3 install neovim-remote'
 directory '/home/vagrant/.pandoc/templates' do
   recursive true
   action :create

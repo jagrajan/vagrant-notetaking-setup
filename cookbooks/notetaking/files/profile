@@ -27,3 +27,13 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 export FZF_DEFAULT_COMMAND='fd --type f'
+
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+  export something="something"
+  export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+  export something="nothing"
+  export VISUAL="nvim"
+  alias vi="nvim"
+fi

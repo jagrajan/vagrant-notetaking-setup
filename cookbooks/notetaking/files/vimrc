@@ -31,6 +31,8 @@ Plug 'godlygeek/tabular'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Rican7/php-doc-modded'
 
+Plug 'joshdick/onedark.vim'
+
 Plug 'dense-analysis/ale'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -39,11 +41,20 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
 
+" Track the engine.
+Plug 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 
 call plug#end()
 
@@ -75,11 +86,7 @@ noremap Y y$
 map <Space> :
 
 let g:indentLine_setConceal = 0
-
-augroup vimrc
-  au BufReadPre * setlocal foldmethod=indent
-  au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
-augroup END
+set foldmethod=indent
 
 "====[ Make the 81st column stand out ]====================
 
@@ -100,47 +107,36 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 " Advanced customization using autoload functions
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 
-nnoremap <Leader>vi :e ~/.config/nvim/init.vim<cr>
-nnoremap <Leader>rc :e ~/.jag/.bashrc<cr>
+nnoremap <Leader>vi :tabedit $MYVIMRC<cr>
+nnoremap <Leader>rv :so $MYVIMRC<cr>
+
+nnoremap <Leader>rc :tabedit ~/.profile<cr>
+
 nnoremap <Leader>fw :FixWhitespace<cr>
 nnoremap <Leader>gc :Gcommit<cr>
-nnoremap <Leader>gg :Gstatus<cr>
+nnoremap <Leader>gg :Gstatus<cr> :tabedit %<cr>
 nnoremap <Leader>zz :tabedit %<cr>
-
-function! GFilesFallback()
-  let output = system('git rev-parse --show-toplevel') " Is there a faster way?
-  let prefix = get(g:, 'fzf_command_prefix', '')
-  if v:shell_error == 0
-    exec "normal :" . prefix . "GFiles\<CR>"
-  else
-    exec "normal :" . prefix . "Files\<CR>"
-  endif
-  return 0
-endfunction
+nnoremap <Leader><space> :noh<cr>
+nnoremap <Leader>tt :tabedit +terminal<cr>
+nnoremap <Leader>ts :sp +terminal<cr>
+nnoremap <Leader>tv :vs +terminal<cr>
+tnoremap <c-q>tt <c-\><c-n> :tabedit +terminal<cr>
+tnoremap <c-q>tv <c-\><c-n> :vs +terminal<cr>
+tnoremap <c-q>ts <c-\><c-n> :sp +terminal<cr>
 
 nnoremap <Leader>, :Files<cr>
-" [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R --languages=php --exclude=vendor --exclude=html/admin/dist-php --exclude-html/admin/dir=alertme-php'
 
 " Ale
 let g:ale_sign_column_always = 1
 " let g:ale_php_langserver_executable = 'langserver'
-let g:ale_php_phan_executable = 'vendor/bin/phan'
-let g:ale_linters = {
-\   'php': ['php', 'langserver'],
-\}
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 0
 let g:deoplete#enable_at_startup = 1
 " Use ALE and also some plugin 'foobar' as completion sources for all code.
 " call deoplete#custom#option('sources', {
 " \ '_': ['ale'],
 " \})
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <c-j> pumvisible() ? "\<C-n>" : "\<c-j>"
+inoremap <expr> <c-k> pumvisible() ? "\<C-p>" : "\<c-n>"
 
-inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
-nnoremap <C-P> :call PhpDocSingle()<CR>
-vnoremap <C-P> :call PhpDocRange()<CR>
-
+syntax on
+colorscheme onedark
